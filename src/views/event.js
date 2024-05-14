@@ -1,46 +1,7 @@
-/* eslint-disable indent */
-/* eslint-disable camelcase */
-import { createElement } from "../render.js";
 import dayjs from "dayjs";
-import { getRandomInteger } from "../utils/getRandomInteger.js";
 import { calculateDuration } from "../utils/calculateDuration.js";
-
-const getCurrentEventTypeIcon = (type) => {
-  switch (type) {
-    case "bus":
-      return "bus";
-
-    case "check-in":
-      return "check-in";
-
-    case "drive":
-      return "drive";
-
-    case "flight":
-      return "flight";
-
-    case "restaurant":
-      return "restaurant";
-
-    case "ship":
-      return "ship";
-
-    case "sightseeing":
-      return "sightseeing";
-
-    case "taxi":
-      return "taxi";
-
-    case "train":
-      return "train";
-
-    case "transport":
-      return "transport";
-
-    default:
-      return "check-in";
-  }
-};
+import AbstractView from "../framework/view/abstract-view.js";
+import { getCurrentEventTypeIcon } from "../utils/getCurrentEventTypeIcon.js";
 
 const createEventTemplate = (
   { id, basePrice, dateFrom, dateTo, isFavorite, offers, type },
@@ -59,11 +20,11 @@ const createEventTemplate = (
       <p class="event__time">
         <time class="event__start-time" datetime="${dateFrom}">${dayjs(
   dateFrom
-).format("hh:mm")}</time>
+).format("HH:mm")}</time>
         —
         <time class="event__end-time" datetime="${dateTo}">${dayjs(
   dateTo
-).format("hh:mm")}</time>
+).format("HH:mm")}</time>
       </p>
         <p class="event__duration">${calculateDuration(dateFrom, dateTo)}</p>
     </div>
@@ -102,26 +63,29 @@ const createEventTemplate = (
   </div>
 </li>`;
 
-export default class Event {
-  constructor(event, offer, destination) {
-    this.event = event;
-    this.offer = offer;
-    this.destination = destination;
+export default class Event extends AbstractView {
+  #event = null;
+  #offers = null;
+  #destinations = null;
+  #onHanldlerClickRollupBtn = null;
+  #rollupBtn = null;
+
+  constructor(event, offers, destinations, onHanldlerClickRollupBtn) {
+    super();
+    this.#event = event;
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#onHanldlerClickRollupBtn = onHanldlerClickRollupBtn;
+    this.#rollupBtn = this.element.querySelector(".event__rollup-btn");
+    this.#rollupBtn.addEventListener("click", this.#handlerClickRollupBtn);
   }
 
-  getTemplate() {
-    return createEventTemplate(this.event, this.offer, this.destination);
+  get template() {
+    return createEventTemplate(this.#event, this.#offers, this.#destinations);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #handlerClickRollupBtn = (e) => {
+    e.preventDefault();
+    this.#onHanldlerClickRollupBtn();
+  };
 }
