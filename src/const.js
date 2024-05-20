@@ -3,14 +3,14 @@ const SEC_IN_MIN = 60;
 const MIN_IN_HOUR = 60;
 const HOUR_IN_DAY = 24;
 const DATE_FORMATS = {
-  time: "HH:mm",
-  shortDate: "MMM DD",
-  formDateTime: "DD/MM/YY HH:mm",
+  time: 'HH:mm',
+  shortDate: 'MMM DD',
+  formDateTime: 'DD/MM/YY HH:mm',
 };
 const DURATION_FORMATS = {
-  days: "DD[D] HH[H] mm[M]",
-  hours: "HH[H] mm[M]",
-  mins: "mm[M]",
+  days: 'DD[D] HH[H] mm[M]',
+  hours: 'HH[H] mm[M]',
+  mins: 'mm[M]',
 };
 
 const MSEC_IN_HOUR = MSEC_IN_SEC * SEC_IN_MIN * MIN_IN_HOUR;

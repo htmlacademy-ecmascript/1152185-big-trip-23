@@ -1,31 +1,26 @@
-import AbstractView from "../framework/view/abstract-view.js";
-import { getCurrentEventTypeIcon } from "../utils/getCurrentEventTypeIcon.js";
-import dayjs from "dayjs";
+import AbstractView from '../framework/view/abstract-view.js';
+import { getCurrentEventTypeIcon } from '../utils/getCurrentEventTypeIcon.js';
+import dayjs from 'dayjs';
 
-const createDataListWithDestinationsTemplate = (destinations) => {
-  return `      <datalist id="destination-list-1">${destinations
-    .map((item) => `<option value=${item.name}>${item.name}</option>`)
-    .join("")}
+const createDataListWithDestinationsTemplate = (destinations) => `      <datalist id="destination-list-1">${destinations
+  .map((item) => `<option value=${item.name}>${item.name}</option>`)
+  .join('')}
   </datalist>`;
-};
 
-const createOfferTemplate = (offer, offersInEvent) => {
-  return `        <div class="event__offer-selector">
+const createOfferTemplate = (offer, offersInEvent) => `        <div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${
-    offer.id
-  }" type="checkbox" name="event-offer-luggage" ${
-    offersInEvent.includes(offer.id) ? "checked" : ""
-  }>
+  offer.id
+}" type="checkbox" name="event-offer-luggage" ${
+  offersInEvent.includes(offer.id) ? 'checked' : ''
+}>
   <label class="event__offer-label" for="event-offer-luggage-${offer.id}">
     <span class="event__offer-title">${offer.title}</span>
     +€&nbsp;
     <span class="event__offer-price">${offer.price}</span>
   </label>
 </div>`;
-};
 
-const createDestinationTemplate = (destination) => {
-  return `<section class="event__section  event__section--destination">
+const createDestinationTemplate = (destination) => `<section class="event__section  event__section--destination">
 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
 <p class="event__destination-description">${destination.description}</p>
 ${
@@ -33,17 +28,16 @@ ${
     ? `<div class="event__photos-container">
                 <div class="event__photos-tape">
                   ${destination.pictures
-                    .map(
-                      (item) =>
-                        `<img class="event__photo" src=${item.src} alt=${item.description}>`
-                    )
-                    .join("")}
+    .map(
+      (item) =>
+        `<img class="event__photo" src=${item.src} alt=${item.description}>`
+    )
+    .join('')}
                 </div>
               </div>`
-    : ""
+    : ''
 }
 </section>`;
-};
 
 const createEventUpdateTemplate = (
   { id, basePrice, dateFrom, dateTo, offers, type },
@@ -51,8 +45,8 @@ const createEventUpdateTemplate = (
   allDesctinations,
   currentDestination
 ) => {
-  const dateFromText = dayjs(dateFrom).format("DD/MM/YY HH:mm");
-  const dateToText = dayjs(dateTo).format("DD/MM/YY HH:mm");
+  const dateFromText = dayjs(dateFrom).format('DD/MM/YY HH:mm');
+  const dateToText = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
   return `
   <li class="trip-events__item" id={${id}}>
@@ -62,8 +56,8 @@ const createEventUpdateTemplate = (
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
         <img class="event__type-icon" width="17" height="17" src="img/icons/${getCurrentEventTypeIcon(
-          type
-        )}.png" alt="Event type icon">
+    type
+  )}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -124,10 +118,10 @@ const createEventUpdateTemplate = (
         ${type}
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
-        currentDestination && currentDestination.name
-          ? currentDestination.name
-          : ""
-      }" list="destination-list-1">
+  currentDestination && currentDestination.name
+    ? currentDestination.name
+    : ''
+}" list="destination-list-1">
       ${createDataListWithDestinationsTemplate(allDesctinations.destinations)}
     </div>
 
@@ -162,7 +156,7 @@ const createEventUpdateTemplate = (
       </div>
     </section>
 
-    ${currentDestination ? createDestinationTemplate(currentDestination) : ""}
+    ${currentDestination ? createDestinationTemplate(currentDestination) : ''}
   </section>
 </form></li>`;
 };
@@ -196,12 +190,12 @@ export default class EventUpdate extends AbstractView {
     this.#onHanldlerClickRollupBtn = onHanldlerClickRollupBtn;
     this.#onHanldlerClickSubmitBtn = onHanldlerClickSubmitBtn;
     this.#onHanldlerClickDeleteBtn = onHanldlerClickDeleteBtn;
-    this.#rollupBtn = this.element.querySelector(".event__rollup-btn");
-    this.#submitBtn = this.element.querySelector(".event__save-btn");
-    this.#deleteBtn = this.element.querySelector(".event__reset-btn");
-    this.#rollupBtn.addEventListener("click", this.#handlerClickRollupBtn);
-    this.#submitBtn.addEventListener("click", this.#handlerClickSubmitBtn);
-    this.#deleteBtn.addEventListener("click", this.#handlerClickDeleteBtn);
+    this.#rollupBtn = this.element.querySelector('.event__rollup-btn');
+    this.#submitBtn = this.element.querySelector('.event__save-btn');
+    this.#deleteBtn = this.element.querySelector('.event__reset-btn');
+    this.#rollupBtn.addEventListener('click', this.#handlerClickRollupBtn);
+    this.#submitBtn.addEventListener('click', this.#handlerClickSubmitBtn);
+    this.#deleteBtn.addEventListener('click', this.#handlerClickDeleteBtn);
   }
 
   get template() {

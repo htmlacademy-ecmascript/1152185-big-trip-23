@@ -1,17 +1,17 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
-import { getRandomInteger } from "../utils/getRandomInteger";
+import { getRandomInteger } from '../utils/getRandomInteger';
 
 const EVENT_TYPES = [
-  "taxi",
-  "bus",
-  "train",
-  "ship",
-  "drive",
-  "flight",
-  "check-in",
-  "sightseeing",
-  "restaurant",
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant',
 ];
 
 export const getEventMock = () => {

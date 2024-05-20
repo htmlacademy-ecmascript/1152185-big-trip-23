@@ -1,15 +1,15 @@
-import { getRandomInteger } from "../utils/getRandomInteger";
+import { getRandomInteger } from '../utils/getRandomInteger';
 
 const TEXT_MOCK = [
-  "Вызвать такси",
-  "Сырный борт",
-  "Уборка номера",
-  "Кислые червеладки",
+  'Вызвать такси',
+  'Сырный борт',
+  'Уборка номера',
+  'Кислые червеладки',
 ];
 
 export const getOffersMock = () => [
   {
-    type: "taxi",
+    type: 'taxi',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -17,7 +17,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "bus",
+    type: 'bus',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -25,7 +25,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "train",
+    type: 'train',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -33,7 +33,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "ship",
+    type: 'ship',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -41,7 +41,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "drive",
+    type: 'drive',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -49,7 +49,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "flight",
+    type: 'flight',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -57,7 +57,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "sightseeing",
+    type: 'sightseeing',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -65,7 +65,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "check-in",
+    type: 'check-in',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],
@@ -73,7 +73,7 @@ export const getOffersMock = () => [
     })),
   },
   {
-    type: "restaurant",
+    type: 'restaurant',
     offers: Array.from({ length: getRandomInteger(0, 5) }, (_, id) => ({
       id: id,
       title: TEXT_MOCK[getRandomInteger(0, TEXT_MOCK.length - 1)],

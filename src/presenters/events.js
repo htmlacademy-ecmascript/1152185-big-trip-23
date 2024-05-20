@@ -1,10 +1,10 @@
-import { render, RenderPosition, replace } from "../framework/render";
-import Event from "../views/event.js";
-import EventUpdate from "../views/event-update.js";
-import Sort from "../views/sort.js";
-import { onEscKeydown } from "../utils/isEscapeKeyDown.js";
+import { render, RenderPosition, replace } from '../framework/render';
+import Event from '../views/event.js';
+import EventUpdate from '../views/event-update.js';
+import Sort from '../views/sort.js';
+import { onEscKeydown } from '../utils/isEscapeKeyDown.js';
 
-const eventItemsContainer = document.querySelector(".trip-events__list");
+const eventItemsContainer = document.querySelector('.trip-events__list');
 
 export default class EventsPresenter {
   constructor(eventsModel, offersModel, destinationsModel) {
@@ -31,8 +31,8 @@ export default class EventsPresenter {
 
         const currentOffer = currentTypeOffer
           ? currentTypeOffer.offers.filter((item) =>
-              event.offers.includes(item.id)
-            )
+            event.offers.includes(item.id)
+          )
           : undefined;
 
         const currentDestination = this.destinationsModel.destinations.find(
@@ -59,21 +59,21 @@ export default class EventsPresenter {
         const onEscKeydownHandler = (e) => onEscKeydown(e, swicthToView);
 
         function submitEventUpdate() {
-          console.log("submit");
+          console.log('submit');
         }
 
         function deleteEvent() {
-          console.log("delete");
+          console.log('delete');
         }
 
         function swicthToEdit() {
           replace(eventUpdateView, eventView);
-          document.addEventListener("keydown", onEscKeydownHandler);
+          document.addEventListener('keydown', onEscKeydownHandler);
         }
 
         function swicthToView() {
           replace(eventView, eventUpdateView);
-          document.removeEventListener("keydown", onEscKeydownHandler);
+          document.removeEventListener('keydown', onEscKeydownHandler);
         }
 
         render(eventView, eventItemsContainer);

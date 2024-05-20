@@ -1,10 +1,10 @@
-import Filter from "../views/filter.js";
-import TripInfo from "../views/trip-info.js";
-import { render, RenderPosition } from "../framework/render.js";
+import Filter from '../views/filter.js';
+import TripInfo from '../views/trip-info.js';
+import { render, RenderPosition } from '../framework/render.js';
 
-const tripMainContainer = document.querySelector(".trip-main");
+const tripMainContainer = document.querySelector('.trip-main');
 const tripControlsFiltersContainer = tripMainContainer.querySelector(
-  ".trip-controls__filters"
+  '.trip-controls__filters'
 );
 
 export default class Presenter {
