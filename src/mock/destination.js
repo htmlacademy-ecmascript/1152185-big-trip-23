@@ -1,13 +1,13 @@
-import { getRandomInteger } from "../utils/getRandomInteger";
+import { getRandomInteger } from '../utils/getRandomInteger';
 
-const CITIES_MOCK = ["Минск", "Сочи", "Прага", "Вильнюс", "Карловы Вары"];
+const CITIES_MOCK = ['Минск', 'Сочи', 'Прага', 'Вильнюс', 'Карловы Вары'];
 
 const DESCCRIPTIONS = [
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  "Cras aliquet varius magna, non porta ligula feugiat eget.",
-  "Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.",
-  "Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.",
-  "Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.",
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Cras aliquet varius magna, non porta ligula feugiat eget.',
+  'Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.',
+  'Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
+  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
 ];
 
 export const getDestinationMock = () => {
@@ -31,6 +31,6 @@ export const getDestinationMock = () => {
 
 //Создаем массив объектов пунктов назначения
 const getDestinations = () =>
-  Array.from({ length: CITIES.length }, setupDestination);
+  Array.from({ length: CITIES_MOCK.length }, getDestinationMock);
 
 export { getDestinations };

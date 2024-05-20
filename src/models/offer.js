@@ -1,4 +1,4 @@
-import { getOffersMock } from "../mock/offer";
+import { getOffersMock } from '../mock/offer';
 
 export default class OffersModel {
   offers = getOffersMock();

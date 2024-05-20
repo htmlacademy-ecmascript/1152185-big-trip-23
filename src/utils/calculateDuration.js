@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
-import { MSEC_IN_HOUR, MSEC_IN_DAY, DURATION_FORMATS } from "../const.js";
+import { MSEC_IN_HOUR, MSEC_IN_DAY, DURATION_FORMATS } from '../const.js';
 
 export const calculateDuration = (dateFrom, dateTo) => {
   const diff = dayjs(dateTo).diff(dayjs(dateFrom)); //Вычисление разницы в мс между двумя датами

@@ -1,5 +1,5 @@
-import { getDestinationMock } from "../mock/destination";
-import { getRandomInteger } from "../utils/getRandomInteger";
+import { getDestinationMock } from '../mock/destination';
+import { getRandomInteger } from '../utils/getRandomInteger';
 
 export default class DestinationModel {
   destinations = Array.from(

@@ -1,12 +1,63 @@
-import { createElement } from "../render.js";
+import AbstractView from '../framework/view/abstract-view.js';
+import { getCurrentEventTypeIcon } from '../utils/getCurrentEventTypeIcon.js';
+import dayjs from 'dayjs';
 
-function createEventUpdateTemplate() {
-  return `<form class="event event--edit" action="#" method="post">
+const createDataListWithDestinationsTemplate = (destinations) => `      <datalist id="destination-list-1">${destinations
+  .map((item) => `<option value=${item.name}>${item.name}</option>`)
+  .join('')}
+  </datalist>`;
+
+const createOfferTemplate = (offer, offersInEvent) => `        <div class="event__offer-selector">
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-${
+  offer.id
+}" type="checkbox" name="event-offer-luggage" ${
+  offersInEvent.includes(offer.id) ? 'checked' : ''
+}>
+  <label class="event__offer-label" for="event-offer-luggage-${offer.id}">
+    <span class="event__offer-title">${offer.title}</span>
+    +€&nbsp;
+    <span class="event__offer-price">${offer.price}</span>
+  </label>
+</div>`;
+
+const createDestinationTemplate = (destination) => `<section class="event__section  event__section--destination">
+<h3 class="event__section-title  event__section-title--destination">Destination</h3>
+<p class="event__destination-description">${destination.description}</p>
+${
+  destination.pictures
+    ? `<div class="event__photos-container">
+                <div class="event__photos-tape">
+                  ${destination.pictures
+    .map(
+      (item) =>
+        `<img class="event__photo" src=${item.src} alt=${item.description}>`
+    )
+    .join('')}
+                </div>
+              </div>`
+    : ''
+}
+</section>`;
+
+const createEventUpdateTemplate = (
+  { id, basePrice, dateFrom, dateTo, offers, type },
+  offer,
+  allDesctinations,
+  currentDestination
+) => {
+  const dateFromText = dayjs(dateFrom).format('DD/MM/YY HH:mm');
+  const dateToText = dayjs(dateTo).format('DD/MM/YY HH:mm');
+
+  return `
+  <li class="trip-events__item" id={${id}}>
+  <form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${getCurrentEventTypeIcon(
+    type
+  )}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -64,27 +115,27 @@ function createEventUpdateTemplate() {
 
     <div class="event__field-group  event__field-group--destination">
       <label class="event__label  event__type-output" for="event-destination-1">
-        Flight
+        ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
-      <datalist id="destination-list-1">
-        <option value="Amsterdam"></option>
-        <option value="Geneva"></option>
-        <option value="Chamonix"></option>
-      </datalist>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
+  currentDestination && currentDestination.name
+    ? currentDestination.name
+    : ''
+}" list="destination-list-1">
+      ${createDataListWithDestinationsTemplate(allDesctinations.destinations)}
     </div>
 
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromText}">
       —
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToText}">
     </div>
 
     <div class="event__field-group  event__field-group--price">
       <label class="event__label" for="event-price-1">
-        <span class="visually-hidden">Price</span>
+        <span class="visually-hidden">${basePrice}</span>
         €
       </label>
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
@@ -101,75 +152,73 @@ function createEventUpdateTemplate() {
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked="">
-          <label class="event__offer-label" for="event-offer-luggage-1">
-            <span class="event__offer-title">Add luggage</span>
-            +€&nbsp;
-            <span class="event__offer-price">50</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked="">
-          <label class="event__offer-label" for="event-offer-comfort-1">
-            <span class="event__offer-title">Switch to comfort</span>
-            +€&nbsp;
-            <span class="event__offer-price">80</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-          <label class="event__offer-label" for="event-offer-meal-1">
-            <span class="event__offer-title">Add meal</span>
-            +€&nbsp;
-            <span class="event__offer-price">15</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-          <label class="event__offer-label" for="event-offer-seats-1">
-            <span class="event__offer-title">Choose seats</span>
-            +€&nbsp;
-            <span class="event__offer-price">5</span>
-          </label>
-        </div>
-
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-          <label class="event__offer-label" for="event-offer-train-1">
-            <span class="event__offer-title">Travel by train</span>
-            +€&nbsp;
-            <span class="event__offer-price">40</span>
-          </label>
-        </div>
+      ${offer.offers.map((item) => createOfferTemplate(item, offers))}
       </div>
     </section>
 
-    <section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
-    </section>
+    ${currentDestination ? createDestinationTemplate(currentDestination) : ''}
   </section>
-</form>`;
-}
+</form></li>`;
+};
 
-export default class EventUpdate {
-  getTemplate() {
-    return createEventUpdateTemplate();
+export default class EventUpdate extends AbstractView {
+  #event = null;
+  #offer = null;
+  #currentDestinations = null;
+  #allDestinations = null;
+  #onHanldlerClickRollupBtn = null;
+  #onHanldlerClickSubmitBtn = null;
+  #onHanldlerClickDeleteBtn = null;
+  #rollupBtn = null;
+  #submitBtn = null;
+  #deleteBtn = null;
+
+  constructor(
+    event,
+    offer,
+    allDestinations,
+    currentDestinations,
+    onHanldlerClickRollupBtn,
+    onHanldlerClickSubmitBtn,
+    onHanldlerClickDeleteBtn
+  ) {
+    super();
+    this.#event = event;
+    this.#offer = offer;
+    this.#allDestinations = allDestinations;
+    this.#currentDestinations = currentDestinations;
+    this.#onHanldlerClickRollupBtn = onHanldlerClickRollupBtn;
+    this.#onHanldlerClickSubmitBtn = onHanldlerClickSubmitBtn;
+    this.#onHanldlerClickDeleteBtn = onHanldlerClickDeleteBtn;
+    this.#rollupBtn = this.element.querySelector('.event__rollup-btn');
+    this.#submitBtn = this.element.querySelector('.event__save-btn');
+    this.#deleteBtn = this.element.querySelector('.event__reset-btn');
+    this.#rollupBtn.addEventListener('click', this.#handlerClickRollupBtn);
+    this.#submitBtn.addEventListener('click', this.#handlerClickSubmitBtn);
+    this.#deleteBtn.addEventListener('click', this.#handlerClickDeleteBtn);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
+  get template() {
+    return createEventUpdateTemplate(
+      this.#event,
+      this.#offer,
+      this.#allDestinations,
+      this.#currentDestinations
+    );
   }
 
-  removeElement() {
-    this.element = null;
-  }
+  #handlerClickRollupBtn = (e) => {
+    e.preventDefault();
+    this.#onHanldlerClickRollupBtn();
+  };
+
+  #handlerClickSubmitBtn = (e) => {
+    e.preventDefault();
+    this.#onHanldlerClickSubmitBtn();
+  };
+
+  #handlerClickDeleteBtn = (e) => {
+    e.preventDefault();
+    this.#onHanldlerClickDeleteBtn();
+  };
 }
