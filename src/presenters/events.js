@@ -1,12 +1,13 @@
-import { render, RenderPosition, replace } from "../framework/render";
-import Event from "../views/event.js";
-import EventUpdate from "../views/event-update.js";
+import { render, RenderPosition } from "../framework/render";
 import Sort from "../views/sort.js";
-import { onEscKeydown } from "../utils/isEscapeKeyDown.js";
+import EventPresenter from "./event.js";
+import { updateData } from "../utils/updateData.js";
 
 const eventItemsContainer = document.querySelector(".trip-events__list");
 
 export default class EventsPresenter {
+  #eventPresenters = new Map();
+
   constructor(eventsModel, offersModel, destinationsModel) {
     this.eventsModel = eventsModel;
     this.offersModel = offersModel;
@@ -29,7 +30,7 @@ export default class EventsPresenter {
           (item) => item.type === event.type
         );
 
-        const currentOffer = currentTypeOffer
+        const currentOffers = currentTypeOffer
           ? currentTypeOffer.offers.filter((item) =>
               event.offers.includes(item.id)
             )
@@ -39,45 +40,25 @@ export default class EventsPresenter {
           (destination) => destination.id === event.destination
         );
 
-        const eventView = new Event(
-          event,
-          currentOffer,
+        const eventPresenter = new EventPresenter(
           currentDestination,
-          swicthToEdit
-        );
-
-        const eventUpdateView = new EventUpdate(
-          event,
-          currentTypeOffer,
+          currentOffers,
           this.destinationsModel,
-          currentDestination,
-          swicthToView,
-          submitEventUpdate,
-          deleteEvent
+          this.#hanldeDataChange,
+          this.#resetAllViews
         );
-
-        const onEscKeydownHandler = (e) => onEscKeydown(e, swicthToView);
-
-        function submitEventUpdate() {
-          console.log("submit");
-        }
-
-        function deleteEvent() {
-          console.log("delete");
-        }
-
-        function swicthToEdit() {
-          replace(eventUpdateView, eventView);
-          document.addEventListener("keydown", onEscKeydownHandler);
-        }
-
-        function swicthToView() {
-          replace(eventView, eventUpdateView);
-          document.removeEventListener("keydown", onEscKeydownHandler);
-        }
-
-        render(eventView, eventItemsContainer);
+        eventPresenter.init(event);
+        this.#eventPresenters.set(event.id, eventPresenter);
       });
     }
   }
+
+  #resetAllViews = () => {
+    this.#eventPresenters.forEach((item) => item.resetEditMode());
+  };
+
+  #hanldeDataChange = (updatedEvent) => {
+    this.eventsModel.events = updateData(this.eventsModel.events, updatedEvent);
+    this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
 }
