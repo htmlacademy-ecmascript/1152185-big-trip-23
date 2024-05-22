@@ -20,3 +20,15 @@ export const MODE_EVENT = {
   VIEW: "VIEW",
   EDIT: "EDIT",
 };
+
+export const SORT_VALUES = {
+  DAY: "day",
+  EVENT: "event",
+  TIME: "time",
+  PRICE: "price",
+  OFFER: "offer",
+};
+
+export const DISABLED_SORT_VALUES = [SORT_VALUES.EVENT, SORT_VALUES.OFFER];
+
+export const DEFAULT_SORT_TYPE = SORT_VALUES.DAY;
