@@ -32,3 +32,15 @@ export const EVENT_TYPES = [
   "taxi",
   "train",
 ];
+
+export const SORT_VALUES = {
+  DAY: "day",
+  EVENT: "event",
+  TIME: "time",
+  PRICE: "price",
+  OFFER: "offer",
+};
+
+export const DISABLED_SORT_VALUES = [SORT_VALUES.EVENT, SORT_VALUES.OFFER];
+
+export const DEFAULT_SORT_TYPE = SORT_VALUES.DAY;

@@ -1,15 +1,23 @@
-import { render, RenderPosition } from "../framework/render";
-import Sort from "../views/sort.js";
 import EventPresenter from "./event.js";
 import { updateData } from "../utils/updateData.js";
+import Sort from "../views/sort.js";
+import { DEFAULT_SORT_TYPE } from "../const.js";
+import { RenderPosition, render, remove } from "../framework/render.js";
+import EventListView from "../views/event-list.js";
+import { sortPoints } from "../utils/sortPoints.js";
 
 const eventItemsContainer = document.querySelector(".trip-events__list");
 
 export default class EventsPresenter {
   #eventPresenters = new Map();
+  #sortView = null;
+  activeSortType = DEFAULT_SORT_TYPE;
+  #eventList = null;
+  #events = null;
 
   constructor(eventsModel, offersModel, destinationsModel) {
     this.eventsModel = eventsModel;
+    this.#events = eventsModel.events;
     this.offersModel = offersModel;
     this.destinationsModel = destinationsModel;
   }
@@ -19,8 +27,23 @@ export default class EventsPresenter {
     this.#renderSort();
   }
 
+  #clearTreap() {
+    this.#eventPresenters.forEach((item) => item.destroy());
+    this.#eventPresenters.clear();
+
+    remove(this.#eventList);
+    this.#eventList = null;
+
+    remove(this.#sortView);
+  }
+
   #renderSort() {
-    render(new Sort(), eventItemsContainer, RenderPosition.AFTERBEGIN);
+    this.#sortView = new Sort(
+      this.#onHandlerClickSortItem,
+      this.activeSortType
+    );
+
+    render(this.#sortView, eventItemsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderEvents() {
@@ -43,7 +66,15 @@ export default class EventsPresenter {
   };
 
   #hanldeDataChange = (updatedEvent) => {
-    this.eventsModel.events = updateData(this.eventsModel.events, updatedEvent);
+    this.#events = updateData(this.#events, updatedEvent);
     this.#eventPresenters.get(updatedEvent.id).init(updatedEvent);
+  };
+
+  #onHandlerClickSortItem = (item) => {
+    this.activeSortType = item;
+    this.#events = sortPoints(this.#events, this.activeSortType);
+
+    this.#clearTreap();
+    this.init();
   };
 }

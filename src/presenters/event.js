@@ -1,7 +1,7 @@
 import { onEscKeydown } from "../utils/isEscapeKeyDown.js";
 import Event from "../views/event.js";
 import EventUpdate from "../views/event-update.js";
-import { render, replace } from "../framework/render";
+import { render, replace, remove } from "../framework/render";
 import { MODE_EVENT } from "../const.js";
 
 const eventItemsContainer = document.querySelector(".trip-events__list");
@@ -35,6 +35,14 @@ export default class EventPresenter {
       this.#swicthToView();
     }
   };
+
+  destroy() {
+    remove(this.#eventView);
+    remove(this.#eventUpdateView);
+    this.#eventView = null;
+    this.#eventUpdateView = null;
+    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+  }
 
   render(event, destinationsModel, offersModel) {
     const prevPointView = this.#eventView;
