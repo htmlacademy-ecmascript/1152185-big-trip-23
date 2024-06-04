@@ -20,3 +20,15 @@ export const MODE_EVENT = {
   VIEW: "VIEW",
   EDIT: "EDIT",
 };
+
+export const EVENT_TYPES = [
+  "bus",
+  "check-in",
+  "drive",
+  "flight",
+  "restaurant",
+  "ship",
+  "sightseeing",
+  "taxi",
+  "train",
+];

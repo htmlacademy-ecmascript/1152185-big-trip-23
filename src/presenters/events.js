@@ -26,23 +26,8 @@ export default class EventsPresenter {
   #renderEvents() {
     if (this.eventsModel.events) {
       this.eventsModel.events.forEach((event) => {
-        const currentTypeOffer = this.offersModel.offers.find(
-          (item) => item.type === event.type
-        );
-
-        const currentOffers = currentTypeOffer
-          ? currentTypeOffer.offers.filter((item) =>
-              event.offers.includes(item.id)
-            )
-          : undefined;
-
-        const currentDestination = this.destinationsModel.destinations.find(
-          (destination) => destination.id === event.destination
-        );
-
         const eventPresenter = new EventPresenter(
-          currentDestination,
-          currentOffers,
+          this.offersModel,
           this.destinationsModel,
           this.#hanldeDataChange,
           this.#resetAllViews
