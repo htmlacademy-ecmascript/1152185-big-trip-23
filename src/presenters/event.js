@@ -1,10 +1,10 @@
-import { onEscKeydown } from "../utils/isEscapeKeyDown.js";
-import Event from "../views/event.js";
-import EventUpdate from "../views/event-update.js";
-import { render, replace, remove } from "../framework/render";
-import { MODE_EVENT } from "../const.js";
+import { onEscKeydown } from '../utils/isEscapeKeyDown.js';
+import Event from '../views/event.js';
+import EventUpdate from '../views/event-update.js';
+import { render, replace, remove } from '../framework/render';
+import { MODE_EVENT } from '../const.js';
 
-const eventItemsContainer = document.querySelector(".trip-events__list");
+const eventItemsContainer = document.querySelector('.trip-events__list');
 
 export default class EventPresenter {
   #eventUpdateView = null;
@@ -14,14 +14,12 @@ export default class EventPresenter {
   #mode = MODE_EVENT.VIEW;
 
   constructor(
-    destination,
-    offers,
+    offersModel,
     destinationsModel,
     onHandleEventUpdate,
     onHandleEditStart
   ) {
-    this.destination = destination;
-    this.offers = offers;
+    this.offersModel = offersModel;
     this.destinationsModel = destinationsModel;
     this.#handleEventUpdate = onHandleEventUpdate;
     this.#handleEditStart = onHandleEditStart;
@@ -29,7 +27,7 @@ export default class EventPresenter {
 
   init(event) {
     this.event = event;
-    this.render(this.event, this.destination, this.offers);
+    this.render(this.event, this.destinationsModel, this.offersModel);
   }
 
   resetEditMode = () => {
@@ -43,16 +41,16 @@ export default class EventPresenter {
     remove(this.#eventUpdateView);
     this.#eventView = null;
     this.#eventUpdateView = null;
-    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+    document.removeEventListener('keydown', this.#onEscKeydownHandler);
   }
 
-  render(event, destination, offers) {
+  render(event, destinationsModel, offersModel) {
     const prevPointView = this.#eventView;
 
     this.#eventView = new Event(
       event,
-      offers,
-      destination,
+      offersModel,
+      destinationsModel,
       this.#swicthToEdit,
       () => {
         const updatePoint = {
@@ -65,9 +63,8 @@ export default class EventPresenter {
 
     this.#eventUpdateView = new EventUpdate(
       event,
-      offers,
-      this.destinationsModel,
-      destination,
+      offersModel,
+      destinationsModel,
       this.#swicthToView,
       this.#submitEventUpdate,
       this.#deleteEvent
@@ -83,23 +80,23 @@ export default class EventPresenter {
   #onEscKeydownHandler = (e) => onEscKeydown(e, this.#swicthToView);
 
   #submitEventUpdate = () => {
-    console.log("submit");
+    console.log('submit');
   };
 
   #deleteEvent = () => {
-    console.log("delete");
+    console.log('delete');
   };
 
   #swicthToEdit = () => {
     this.#handleEditStart();
     replace(this.#eventUpdateView, this.#eventView);
-    document.addEventListener("keydown", this.#onEscKeydownHandler);
+    document.addEventListener('keydown', this.#onEscKeydownHandler);
     this.#mode = MODE_EVENT.EDIT;
   };
 
   #swicthToView = () => {
     replace(this.#eventView, this.#eventUpdateView);
-    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+    document.removeEventListener('keydown', this.#onEscKeydownHandler);
     this.#mode = MODE_EVENT.VIEW;
   };
 }

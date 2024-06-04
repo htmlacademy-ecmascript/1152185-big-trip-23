@@ -1,4 +1,4 @@
-import { SORT_VALUES } from "../const";
+import { SORT_VALUES } from '../const';
 
 const getTimeDifference = ({ dateFrom, dateTo }) =>
   new Date(dateTo).getDate() - new Date(dateFrom).getDate();

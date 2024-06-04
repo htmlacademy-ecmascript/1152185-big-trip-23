@@ -1,12 +1,11 @@
-import EventPresenter from "./event.js";
-import { updateData } from "../utils/updateData.js";
-import Sort from "../views/sort.js";
-import { DEFAULT_SORT_TYPE } from "../const.js";
-import { RenderPosition, render, remove } from "../framework/render.js";
-import EventListView from "../views/event-list.js";
-import { sortPoints } from "../utils/sortPoints.js";
+import EventPresenter from './event.js';
+import { updateData } from '../utils/updateData.js';
+import Sort from '../views/sort.js';
+import { DEFAULT_SORT_TYPE } from '../const.js';
+import { RenderPosition, render, remove } from '../framework/render.js';
+import { sortPoints } from '../utils/sortPoints.js';
 
-const eventItemsContainer = document.querySelector(".trip-events__list");
+const eventItemsContainer = document.querySelector('.trip-events__list');
 
 export default class EventsPresenter {
   #eventPresenters = new Map();
@@ -47,26 +46,10 @@ export default class EventsPresenter {
   }
 
   #renderEvents() {
-    this.#eventList = new EventListView();
-    if (this.#events) {
-      this.#events.forEach((event) => {
-        const currentTypeOffer = this.offersModel.offers.find(
-          (item) => item.type === event.type
-        );
-
-        const currentOffers = currentTypeOffer
-          ? currentTypeOffer.offers.filter((item) =>
-              event.offers.includes(item.id)
-            )
-          : undefined;
-
-        const currentDestination = this.destinationsModel.destinations.find(
-          (destination) => destination.id === event.destination
-        );
-
+    if (this.eventsModel.events) {
+      this.eventsModel.events.forEach((event) => {
         const eventPresenter = new EventPresenter(
-          currentDestination,
-          currentOffers,
+          this.offersModel,
           this.destinationsModel,
           this.#hanldeDataChange,
           this.#resetAllViews
