@@ -1,8 +1,8 @@
-import { EVENT_TYPES } from "../const.js";
-import AbstractStatefulView from "../framework/view/abstract-stateful-view.js";
-import { getCurrentEventTypeIcon } from "../utils/getCurrentEventTypeIcon.js";
-import dayjs from "dayjs";
-import { v4 as uuidv4 } from "uuid";
+import { EVENT_TYPES } from '../const.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
+import { getCurrentEventTypeIcon } from '../utils/getCurrentEventTypeIcon.js';
+import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 
 const createDataListWithDestinationsTemplate = (
   destinations
@@ -10,7 +10,7 @@ const createDataListWithDestinationsTemplate = (
   .map(
     (item) => `<option id=${item.id} value=${item.name}>${item.name}</option>`
   )
-  .join("")}
+  .join('')}
   </datalist>`;
 
 const createOfferTemplate = (offer, offersInEvent) => {
@@ -18,8 +18,8 @@ const createOfferTemplate = (offer, offersInEvent) => {
 
   return `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="${currentId}" type="checkbox" name="event-offer-luggage" ${
-    offersInEvent.includes(offer.id) ? "checked" : ""
-  }>
+  offersInEvent.includes(offer.id) ? 'checked' : ''
+}>
   <label class="event__offer-label" for="${currentId}">
     <span class="event__offer-title">${offer.title}</span>
     +€&nbsp;
@@ -31,14 +31,14 @@ const createOfferTemplate = (offer, offersInEvent) => {
 const createEventType = (type) => `<fieldset class="event__type-group">
 <legend class="visually-hidden">Event type</legend>
 ${EVENT_TYPES.map(
-  (item) => `<div class="event__type-item">
+    (item) => `<div class="event__type-item">
     <input ${
-      item === type ? "checked=" : ""
-    } id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
+  item === type ? 'checked=' : ''
+} id="event-type-${item}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
     <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-1"
   }>${item}</label>
   </div>`
-).join("")}
+  ).join('')}
 </fieldset>`;
 
 const createDestinationTemplate = (
@@ -51,21 +51,21 @@ ${
     ? `<div class="event__photos-container">
                 <div class="event__photos-tape">
                   ${destination.pictures
-                    .map(
-                      (item) =>
-                        `<img class="event__photo" src=${item.src} alt=${item.description}>`
-                    )
-                    .join("")}
+    .map(
+      (item) =>
+        `<img class="event__photo" src=${item.src} alt=${item.description}>`
+    )
+    .join('')}
                 </div>
               </div>`
-    : ""
+    : ''
 }
 </section>`;
 
 const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
   const { id, basePrice, dateFrom, dateTo, offers, type, destination } = state;
-  const dateFromText = dayjs(dateFrom).format("DD/MM/YY HH:mm");
-  const dateToText = dayjs(dateTo).format("DD/MM/YY HH:mm");
+  const dateFromText = dayjs(dateFrom).format('DD/MM/YY HH:mm');
+  const dateToText = dayjs(dateTo).format('DD/MM/YY HH:mm');
   const currentTypeOffer = allOffers.offers.find((item) => item.type === type);
 
   const currentDestination = allDestinations.destinations.find(
@@ -80,8 +80,8 @@ const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
         <img class="event__type-icon" width="17" height="17" src="img/icons/${getCurrentEventTypeIcon(
-          type
-        )}.png" alt="Event type icon">
+    type
+  )}.png" alt="Event type icon">
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -95,10 +95,10 @@ const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
         ${type}
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
-        currentDestination && currentDestination.name
-          ? currentDestination.name
-          : ""
-      }" list="destination-list-1">
+  currentDestination && currentDestination.name
+    ? currentDestination.name
+    : ''
+}" list="destination-list-1">
       ${createDataListWithDestinationsTemplate(allDestinations.destinations)}
     </div>
 
@@ -126,20 +126,20 @@ const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
   </header>
   <section class="event__details">
     ${
-      currentTypeOffer.offers.length > 0
-        ? `<section class="event__section  event__section--offers">
+  currentTypeOffer.offers.length > 0
+    ? `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
       ${currentTypeOffer.offers
-        .map((item) => createOfferTemplate(item, offers))
-        .join("")}
+    .map((item) => createOfferTemplate(item, offers))
+    .join('')}
       </div>
     </section>`
-        : ""
-    }
+    : ''
+}
 
-    ${currentDestination ? createDestinationTemplate(currentDestination) : ""}
+    ${currentDestination ? createDestinationTemplate(currentDestination) : ''}
   </section>
 </form></li>`;
 };
@@ -185,15 +185,15 @@ export default class EventUpdate extends AbstractStatefulView {
   }
 
   _restoreHandlers() {
-    this.#rollupBtn = this.element.querySelector(".event__rollup-btn");
-    this.#submitBtn = this.element.querySelector(".event__save-btn");
-    this.#deleteBtn = this.element.querySelector(".event__reset-btn");
-    this.#eventForm = this.element.querySelector(".event--edit");
+    this.#rollupBtn = this.element.querySelector('.event__rollup-btn');
+    this.#submitBtn = this.element.querySelector('.event__save-btn');
+    this.#deleteBtn = this.element.querySelector('.event__reset-btn');
+    this.#eventForm = this.element.querySelector('.event--edit');
 
-    this.#rollupBtn.addEventListener("click", this.#handlerClickRollupBtn);
-    this.#submitBtn.addEventListener("click", this.#handlerClickSubmitBtn);
-    this.#deleteBtn.addEventListener("click", this.#handlerClickDeleteBtn);
-    this.#eventForm.addEventListener("change", this.#handlerEventForm);
+    this.#rollupBtn.addEventListener('click', this.#handlerClickRollupBtn);
+    this.#submitBtn.addEventListener('click', this.#handlerClickSubmitBtn);
+    this.#deleteBtn.addEventListener('click', this.#handlerClickDeleteBtn);
+    this.#eventForm.addEventListener('change', this.#handlerEventForm);
   }
 
   #handlerClickRollupBtn = (e) => {
@@ -213,27 +213,27 @@ export default class EventUpdate extends AbstractStatefulView {
   };
 
   #handlerEventForm = (e) => {
-    if (e.target.name === "event-offer-luggage") {
+    if (e.target.name === 'event-offer-luggage') {
       this.#handlerChangeEventOffer(e.target.id, e.target.checked);
     }
 
-    if (e.target.name === "event-type") {
+    if (e.target.name === 'event-type') {
       this.#handlerChangeEventType(e.target.value);
     }
 
-    if (e.target.name === "event-destination") {
+    if (e.target.name === 'event-destination') {
       this.#handlerChangeEventDestination(e.target.value);
     }
 
-    if (e.target.name === "event-start-time") {
+    if (e.target.name === 'event-start-time') {
       this.#handlerChangeEventTimeStart(e.target.value);
     }
 
-    if (e.target.name === "event-end-time") {
+    if (e.target.name === 'event-end-time') {
       this.#handlerChangeEventTimeEnd(e.target.value);
     }
 
-    if (e.target.name === "event-price") {
+    if (e.target.name === 'event-price') {
       this.#handlerChangeEventPrice(Number(e.target.value));
     }
   };
@@ -256,7 +256,7 @@ export default class EventUpdate extends AbstractStatefulView {
 
   #handlerChangeEventOffer = (id, value) => {
     const newOffers = [...this._state.offers];
-    const currentPosition = id.indexOf("MY_ID-");
+    const currentPosition = id.indexOf('MY_ID-');
 
     const targetOfferId = Number(id.slice(currentPosition + 6));
 

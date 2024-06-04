@@ -1,12 +1,11 @@
-import EventPresenter from "./event.js";
-import { updateData } from "../utils/updateData.js";
-import Sort from "../views/sort.js";
-import { DEFAULT_SORT_TYPE } from "../const.js";
-import { RenderPosition, render, remove } from "../framework/render.js";
-import EventListView from "../views/event-list.js";
-import { sortPoints } from "../utils/sortPoints.js";
+import EventPresenter from './event.js';
+import { updateData } from '../utils/updateData.js';
+import Sort from '../views/sort.js';
+import { DEFAULT_SORT_TYPE } from '../const.js';
+import { RenderPosition, render, remove } from '../framework/render.js';
+import { sortPoints } from '../utils/sortPoints.js';
 
-const eventItemsContainer = document.querySelector(".trip-events__list");
+const eventItemsContainer = document.querySelector('.trip-events__list');
 
 export default class EventsPresenter {
   #eventPresenters = new Map();
