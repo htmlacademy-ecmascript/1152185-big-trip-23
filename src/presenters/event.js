@@ -1,10 +1,8 @@
-import { onEscKeydown } from '../utils/isEscapeKeyDown.js';
-import Event from '../views/event.js';
-import EventUpdate from '../views/event-update.js';
-import { render, replace, remove } from '../framework/render';
-import { MODE_EVENT } from '../const.js';
-
-const eventItemsContainer = document.querySelector('.trip-events__list');
+import { onEscKeydown } from "../utils/isEscapeKeyDown.js";
+import Event from "../views/event.js";
+import EventUpdate from "../views/event-update.js";
+import { render, replace, remove } from "../framework/render";
+import { MODE_EVENT, UPDATE_TYPES, USER_ACTIONS } from "../const.js";
 
 export default class EventPresenter {
   #eventUpdateView = null;
@@ -17,8 +15,10 @@ export default class EventPresenter {
     offersModel,
     destinationsModel,
     onHandleEventUpdate,
-    onHandleEditStart
+    onHandleEditStart,
+    container
   ) {
+    this.container = container;
     this.offersModel = offersModel;
     this.destinationsModel = destinationsModel;
     this.#handleEventUpdate = onHandleEventUpdate;
@@ -41,7 +41,7 @@ export default class EventPresenter {
     remove(this.#eventUpdateView);
     this.#eventView = null;
     this.#eventUpdateView = null;
-    document.removeEventListener('keydown', this.#onEscKeydownHandler);
+    document.removeEventListener("keydown", this.#onEscKeydownHandler);
   }
 
   render(event, destinationsModel, offersModel) {
@@ -52,13 +52,7 @@ export default class EventPresenter {
       offersModel,
       destinationsModel,
       this.#swicthToEdit,
-      () => {
-        const updatePoint = {
-          ...this.event,
-          isFavorite: !this.event.isFavorite,
-        };
-        this.#handleEventUpdate(updatePoint);
-      }
+      this.#updateEvent
     );
 
     this.#eventUpdateView = new EventUpdate(
@@ -71,7 +65,7 @@ export default class EventPresenter {
     );
 
     if (prevPointView === null) {
-      render(this.#eventView, eventItemsContainer);
+      render(this.#eventView, this.container);
     } else {
       replace(this.#eventView, prevPointView);
     }
@@ -79,24 +73,44 @@ export default class EventPresenter {
 
   #onEscKeydownHandler = (e) => onEscKeydown(e, this.#swicthToView);
 
-  #submitEventUpdate = () => {
-    console.log('submit');
+  #updateEvent = () => {
+    const updatePoint = {
+      ...this.event,
+      isFavorite: !this.event.isFavorite,
+    };
+    this.#handleEventUpdate(
+      USER_ACTIONS.UPDATE_EVENT,
+      UPDATE_TYPES.EVENT_DATA_CHANGE,
+      updatePoint
+    );
+  };
+
+  #submitEventUpdate = (data) => {
+    this.#handleEventUpdate(
+      USER_ACTIONS.UPDATE_EVENT,
+      UPDATE_TYPES.NEW_DATA,
+      data
+    );
   };
 
   #deleteEvent = () => {
-    console.log('delete');
+    this.#handleEventUpdate(
+      USER_ACTIONS.DELETE_EVENT,
+      UPDATE_TYPES.NEW_DATA,
+      this.event
+    );
   };
 
   #swicthToEdit = () => {
     this.#handleEditStart();
     replace(this.#eventUpdateView, this.#eventView);
-    document.addEventListener('keydown', this.#onEscKeydownHandler);
+    document.addEventListener("keydown", this.#onEscKeydownHandler);
     this.#mode = MODE_EVENT.EDIT;
   };
 
   #swicthToView = () => {
     replace(this.#eventView, this.#eventUpdateView);
-    document.removeEventListener('keydown', this.#onEscKeydownHandler);
+    document.removeEventListener("keydown", this.#onEscKeydownHandler);
     this.#mode = MODE_EVENT.VIEW;
   };
 }
