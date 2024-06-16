@@ -1,20 +1,20 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
-import { getRandomInteger } from '../utils/getRandomInteger';
+import { getRandomInteger } from "../utils/getRandomInteger";
 
 const EVENT_TYPES = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant',
+  "taxi",
+  "bus",
+  "train",
+  "ship",
+  "drive",
+  "flight",
+  "check-in",
+  "sightseeing",
+  "restaurant",
 ];
 
-export const getEventMock = () => {
+export const getEvent = () => {
   const dateFrom = new Date(
     2024,
     getRandomInteger(0, 11),
@@ -36,3 +36,6 @@ export const getEventMock = () => {
     type: EVENT_TYPES[getRandomInteger(0, EVENT_TYPES.length - 1)],
   };
 };
+
+export const getEventsMock = () =>
+  Array.from({ length: getRandomInteger(3, 10) }, getEvent);

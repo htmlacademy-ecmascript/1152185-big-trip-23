@@ -63,11 +63,11 @@ ${
 }
 </section>`;
 
-const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
+const createEventUpdateTemplate = (state, allDestinations, offersModel) => {
   const { id, basePrice, dateFrom, dateTo, offers, type, destination } = state;
   const dateFromText = dayjs(dateFrom).format("DD/MM/YY HH:mm");
   const dateToText = dayjs(dateTo).format("DD/MM/YY HH:mm");
-  const currentTypeOffer = allOffers.offers.find((item) => item.type === type);
+  const currentTypeOffer = offersModel.getByType(type);
 
   const currentDestination = allDestinations.destinations.find(
     (item) => item.id === destination
@@ -116,7 +116,7 @@ const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
         <span class="visually-hidden">${basePrice}</span>
         €
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+      <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -127,12 +127,12 @@ const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
   </header>
   <section class="event__details">
     ${
-      currentTypeOffer.offers.length > 0
+      currentTypeOffer.length > 0
         ? `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-      ${currentTypeOffer.offers
+      ${currentTypeOffer
         .map((item) => createOfferTemplate(item, offers))
         .join("")}
       </div>
@@ -148,7 +148,7 @@ const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
 export default class EventUpdate extends AbstractStatefulView {
   #event = null;
   #destinations = null;
-  #offers = null;
+  #offersModel = null;
   #onHanldlerClickRollupBtn = null;
   #onHanldlerClickSubmitBtn = null;
   #onHanldlerClickDeleteBtn = null;
@@ -161,7 +161,7 @@ export default class EventUpdate extends AbstractStatefulView {
 
   constructor(
     event,
-    offers,
+    offersModel,
     destinations,
     onHanldlerClickRollupBtn,
     onHanldlerClickSubmitBtn,
@@ -171,7 +171,7 @@ export default class EventUpdate extends AbstractStatefulView {
     this._setState(event);
     this.#event = event;
     this.#destinations = destinations;
-    this.#offers = offers;
+    this.#offersModel = offersModel;
     this.#onHanldlerClickRollupBtn = onHanldlerClickRollupBtn;
     this.#onHanldlerClickSubmitBtn = onHanldlerClickSubmitBtn;
     this.#onHanldlerClickDeleteBtn = onHanldlerClickDeleteBtn;
@@ -182,7 +182,7 @@ export default class EventUpdate extends AbstractStatefulView {
     return createEventUpdateTemplate(
       this._state,
       this.#destinations,
-      this.#offers
+      this.#offersModel
     );
   }
 
@@ -237,7 +237,7 @@ export default class EventUpdate extends AbstractStatefulView {
 
   #handlerClickSubmitBtn = (e) => {
     e.preventDefault();
-    this.#onHanldlerClickSubmitBtn();
+    this.#onHanldlerClickSubmitBtn(this._state);
   };
 
   #handlerClickDeleteBtn = (e) => {
@@ -273,12 +273,10 @@ export default class EventUpdate extends AbstractStatefulView {
 
   #handlerChangeEventTimeStart = (value) => {
     this.updateElement({ ...this._state, dateFrom: value });
-    console.log(this._state);
   };
 
   #handlerChangeEventTimeEnd = (value) => {
     this.updateElement({ ...this._state, dateTo: value });
-    console.log(this._state);
   };
 
   #handlerChangeEventPrice = (value) => {
