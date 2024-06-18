@@ -6,6 +6,7 @@ import { RenderPosition, render, remove } from "../framework/render.js";
 import { sortPoints } from "../utils/sortPoints.js";
 import { filter } from "../utils/filterEvents.js";
 import EmptyEvents from "../views/empty-events.js";
+import LoadingView from "../views/loading.js";
 
 export default class EventsPresenter {
   #eventPresenters = new Map();
@@ -14,6 +15,14 @@ export default class EventsPresenter {
   #eventList = null;
   #events = null;
   #newEventPresenter = null;
+  #isLoading = true;
+  #isError = false;
+  #loadingComponent = new LoadingView();
+  #container = null;
+  #eventsModel = null;
+  #offersModel = null;
+  #destinationsModel = null;
+  #activeFilterModel = null;
 
   constructor(
     eventsModel,
@@ -23,21 +32,25 @@ export default class EventsPresenter {
     newEventPresenter,
     container
   ) {
-    this.container = container;
-    this.eventsModel = eventsModel;
-    this.#events = eventsModel.getData();
-    this.offersModel = offersModel;
-    this.destinationsModel = destinationsModel;
-    this.activeFilterModel = activeFilterModel;
+    this.#container = container;
+    this.#eventsModel = eventsModel;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
+    this.#activeFilterModel = activeFilterModel;
     this.#newEventPresenter = newEventPresenter;
 
-    this.eventsModel.addObserver(this.#modelEventHandler);
-    this.activeFilterModel.addObserver(this.#modelEventHandler);
+    this.#eventsModel.addObserver(this.#modelEventHandler);
+    this.#activeFilterModel.addObserver(this.#modelEventHandler);
   }
 
   init() {
-    this.#renderEvents();
-    this.#renderSort();
+    if (this.#isLoading) {
+      this.#newEventPresenter.disableButton();
+      this.#renderLoading();
+    } else {
+      this.#renderEvents();
+      this.#renderSort();
+    }
   }
 
   onHandlerNewEvent = () => {
@@ -62,27 +75,33 @@ export default class EventsPresenter {
       this.activeSortType
     );
 
-    render(this.#sortView, this.container, RenderPosition.AFTERBEGIN);
+    render(this.#sortView, this.#container, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#container);
   }
 
   #renderEvents() {
-    const activeFilterType = this.activeFilterModel.get();
+    this.#newEventPresenter.enableButton();
+    const activeFilterType = this.#activeFilterModel.get();
     const filteredEvents = filter[activeFilterType.toUpperCase()](this.#events);
+
     if (filteredEvents.length > 0) {
       filteredEvents.forEach((event) => {
         const eventPresenter = new EventPresenter(
-          this.offersModel,
-          this.destinationsModel,
+          this.#offersModel,
+          this.#destinationsModel,
           this.#handleDataChange,
           this.#resetAllViews,
-          this.container
+          this.#container
         );
         eventPresenter.init(event);
         this.#eventPresenters.set(event.id, eventPresenter);
       });
     } else {
       this.#eventList = new EmptyEvents(activeFilterType);
-      render(this.#eventList, this.container);
+      render(this.#eventList, this.#container);
     }
   }
 
@@ -93,7 +112,7 @@ export default class EventsPresenter {
   #handleDataChange = async (actionType, updateType, updatedItem) => {
     if (actionType === USER_ACTIONS.UPDATE_EVENT) {
       try {
-        await this.eventsModel.update(updateType, updatedItem);
+        await this.#eventsModel.update(updateType, updatedItem);
       } catch (error) {
         console.log(error);
       }
@@ -101,7 +120,7 @@ export default class EventsPresenter {
 
     if (actionType === USER_ACTIONS.ADD_EVENT) {
       try {
-        await this.eventsModel.add(updateType, updatedItem);
+        await this.#eventsModel.add(updateType, updatedItem);
       } catch (error) {
         console.log(error);
       }
@@ -109,7 +128,7 @@ export default class EventsPresenter {
 
     if (actionType === USER_ACTIONS.DELETE_EVENT) {
       try {
-        await this.eventsModel.delete(updateType, updatedItem);
+        await this.#eventsModel.delete(updateType, updatedItem);
       } catch (error) {
         console.log(error);
       }
@@ -117,7 +136,7 @@ export default class EventsPresenter {
 
     if (actionType === USER_ACTIONS.UPDATE_EVENT) {
       try {
-        await this.eventsModel.update(updateType, updatedItem);
+        await this.#eventsModel.update(updateType, updatedItem);
       } catch (error) {
         console.log(error);
       }
@@ -131,17 +150,25 @@ export default class EventsPresenter {
     }
 
     if (updateType === UPDATE_TYPES.NEW_DATA) {
-      this.#events = this.eventsModel.getData();
+      this.#events = this.#eventsModel.get();
 
       this.#clearTreap();
       this.init();
     }
 
     if (updateType === UPDATE_TYPES.FILTER_DATA) {
-      this.#events = this.eventsModel.getData();
+      this.#events = this.#eventsModel.get();
       this.activeSortType = DEFAULT_SORT_TYPE;
 
       this.#clearTreap();
+      this.init();
+    }
+
+    if (updateType === UPDATE_TYPES.INIT) {
+      this.#isLoading = false;
+      this.#isError = data.isError;
+      this.#events = this.#eventsModel.get();
+      remove(this.#loadingComponent);
       this.init();
     }
   };

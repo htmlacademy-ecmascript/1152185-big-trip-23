@@ -1,13 +1,13 @@
 import EventsModel from "./models/events.js";
 import OffersModel from "./models/offers.js";
-import DestinationModel from "./models/destination.js";
+import DestinationsModel from "./models/destinations.js";
 import EventsPresenter from "./presenters/events.js";
 import { ActiveFilterModel } from "./models/filters.js";
 import FiltersPresenter from "./presenters/filters.js";
-import { getOffersMock } from "./mock/offer.js";
-import { getEventsMock } from "./mock/events.js";
 import { FILTERS } from "./mock/filters.js";
 import NewEvent from "./presenters/new-event.js";
+import EventsApiService from "./services/api-service-event.js";
+import { AUTHORIZATION, END_POINT } from "./const.js";
 
 const tripMainContainer = document.querySelector(".trip-main");
 const eventItemsContainer = document.querySelector(".trip-events__list");
@@ -15,22 +15,29 @@ const tripControlsFiltersContainer = tripMainContainer.querySelector(
   ".trip-controls__filters"
 );
 
-const eventsModel = new EventsModel(getEventsMock());
-const offersModel = new OffersModel(getOffersMock());
-const destinationModel = new DestinationModel();
+const pointsApiService = new EventsApiService(END_POINT, AUTHORIZATION);
+
+const destinationsModel = new DestinationsModel(pointsApiService);
+const offersModel = new OffersModel(pointsApiService);
+const eventsModel = new EventsModel(
+  pointsApiService,
+  destinationsModel,
+  offersModel
+);
 const activeFilterModel = new ActiveFilterModel();
+eventsModel.init();
 
 const newEventPresenter = new NewEvent(
   tripMainContainer,
   eventItemsContainer,
-  destinationModel,
+  destinationsModel,
   offersModel
 );
 
 const eventsPresenter = new EventsPresenter(
   eventsModel,
   offersModel,
-  destinationModel,
+  destinationsModel,
   activeFilterModel,
   newEventPresenter,
   eventItemsContainer
@@ -42,6 +49,6 @@ const filtersPresenter = new FiltersPresenter(
   tripControlsFiltersContainer
 );
 
+newEventPresenter.init(eventsPresenter.onHandlerNewEvent);
 eventsPresenter.init();
 filtersPresenter.init();
-newEventPresenter.init(eventsPresenter.onHandlerNewEvent);

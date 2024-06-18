@@ -5,16 +5,12 @@ import { getCurrentEventTypeIcon } from "../utils/getCurrentEventTypeIcon.js";
 
 const createEventTemplate = (
   { id, basePrice, dateFrom, dateTo, isFavorite, offers, type, destination },
-  offersModel,
-  allDestinations
+  allOffers,
+  destinations
 ) => {
-  const currentDestination = allDestinations.destinations.find(
+  const currentDestination = destinations.find(
     (item) => item.id === destination
   );
-
-  const currentOffers = offersModel
-    .getByType(type)
-    .filter((item) => offers.includes(item.id));
 
   return `<li class="trip-events__item" id=${id}>
     <div class="event">
@@ -45,12 +41,12 @@ const createEventTemplate = (
         €&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       ${
-        currentOffers.length > 0
+        offers.length > 0 && allOffers.length > 0
           ? `<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${currentOffers
+        ${allOffers
           .map((item) => {
-            if (offers.includes(item.id)) {
+            if (item.type === type && offers.includes(item.id)) {
               return `<li class="event__offer">
                   <span class="event__offer-title">${item.title}</span>
                   +€&nbsp;

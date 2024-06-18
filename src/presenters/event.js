@@ -49,16 +49,16 @@ export default class EventPresenter {
 
     this.#eventView = new Event(
       event,
-      offersModel,
-      destinationsModel,
+      offersModel.get(),
+      destinationsModel.get(),
       this.#swicthToEdit,
       this.#updateEvent
     );
 
     this.#eventUpdateView = new EventUpdate(
       event,
-      offersModel,
-      destinationsModel,
+      offersModel.get(),
+      destinationsModel.get(),
       this.#swicthToView,
       this.#submitEventUpdate,
       this.#deleteEvent
