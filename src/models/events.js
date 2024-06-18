@@ -1,34 +1,76 @@
+import { UPDATE_TYPES } from "../const.js";
 import Observable from "../framework/observable.js";
+import { adaptToClient, adaptToServer } from "../utils/adapters.js";
 import { updateData } from "../utils/updateData.js";
 
 export default class EventsModel extends Observable {
-  #events = null;
+  #events = [];
+  #service = null;
+  #destinationsModel = null;
+  #offersModel = null;
 
-  constructor(events) {
+  constructor(service, destinationsModel, offersModel) {
     super();
-    this.#events = events;
+    this.#service = service;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
-  getData() {
+  get() {
     return this.#events;
   }
 
   getById(id) {
-    return this.#events.find((event) => event.id === id);
+    return this.#events.find((point) => point.id === id);
   }
 
-  update(updateType, data) {
-    this.#events = updateData(this.#events, data);
-    this._notify(updateType, data);
+  async init() {
+    try {
+      await Promise.all([
+        this.#destinationsModel.init(),
+        this.#offersModel.init(),
+      ]);
+      const events = await this.#service.events;
+      this.#events = events.map(adaptToClient);
+      this._notify(UPDATE_TYPES.INIT, { isError: false });
+    } catch {
+      this.#events = [];
+      this._notify(UPDATE_TYPES.INIT, { isError: true });
+    }
   }
 
-  add(updateType, data) {
-    this.#events.push(data);
-    this._notify(updateType, this.getData());
+  async update(updateType, event) {
+    try {
+      console.log(updateType, event);
+      const updatedEvent = await this.#service.updateEvent(
+        adaptToServer(event)
+      );
+      const adaptedEvent = adaptToClient(updatedEvent);
+      this.#events = updateData(this.#events, adaptedEvent);
+      this._notify(updateType, adaptedEvent);
+    } catch {
+      throw new Error("Update failure");
+    }
   }
 
-  delete(updateType, data) {
-    this.#events = this.#events.filter((item) => item.id !== data.id);
-    this._notify(updateType);
+  async add(updateType, event) {
+    try {
+      const addedEvent = await this.#service.addPoint(adaptToServer(event));
+      const adaptedEvent = adaptToClient(addedEvent);
+      this.#events.push(adaptedEvent);
+      this._notify(updateType, adaptedEvent);
+    } catch {
+      throw new Error("Add failure");
+    }
+  }
+
+  async delete(updateType, event) {
+    try {
+      await this.#service.deleteEvent(event);
+      this.#events = this.#events.filter((item) => item.id !== event.id);
+      this._notify(updateType);
+    } catch {
+      throw new Error("Delete failure");
+    }
   }
 }

@@ -55,6 +55,7 @@ export const UPDATE_TYPES = {
   EVENT_DATA_CHANGE: "EVENT_DATA_CHANGE",
   NEW_DATA: "NEW_DATA",
   FILTER_DATA: "FILTER_DATA",
+  INIT: "INIT",
 };
 
 export const FILTERS_TYPE = {
@@ -72,4 +73,20 @@ export const EVENT_EMPTY = {
   isFavorite: false,
   offers: [],
   type: EVENT_TYPES[0],
+};
+
+export const AUTHORIZATION = "Basic umB8tRoVHKu5p3GdQ";
+export const END_POINT = "https://23.objects.htmlacademy.pro/big-trip";
+
+export const Method = {
+  GET: "GET",
+  PUT: "PUT",
+  POST: "POST",
+  DELETE: "DELETE",
+};
+
+export const SourceUrl = {
+  POINTS: "points",
+  OFFERS: "offers",
+  DESTINATIONS: "destinations",
 };

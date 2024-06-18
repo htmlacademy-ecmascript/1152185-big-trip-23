@@ -2,7 +2,7 @@ import AbstractView from "../framework/view/abstract-view";
 
 const getCurrentText = (filterType) => {
   switch (filterType) {
-    case "everthing":
+    case "everything":
       return "Click New Event to create your first point";
     case "past":
       return "There are no past events now";

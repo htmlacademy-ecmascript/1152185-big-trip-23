@@ -15,13 +15,13 @@ const createDataListWithDestinationsTemplate = (
   </datalist>`;
 
 const createOfferTemplate = (offer, offersInEvent) => {
-  const currentId = `${uuidv4()}-MY_ID-${offer.id}`;
-
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="${currentId}" type="checkbox" name="event-offer-luggage" ${
+  <input class="event__offer-checkbox  visually-hidden" id="${
+    offer.id
+  }" type="checkbox" name="event-offer-luggage" ${
     offersInEvent.includes(offer.id) ? "checked" : ""
   }>
-  <label class="event__offer-label" for="${currentId}">
+  <label class="event__offer-label" for="${offer.id}">
     <span class="event__offer-title">${offer.title}</span>
     +€&nbsp;
     <span class="event__offer-price">${offer.price}</span>
@@ -63,15 +63,18 @@ ${
 }
 </section>`;
 
-const createEventUpdateTemplate = (state, allDestinations, offersModel) => {
+const createEventUpdateTemplate = (state, allDestinations, allOffers) => {
   const { id, basePrice, dateFrom, dateTo, offers, type, destination } = state;
   const dateFromText = dayjs(dateFrom).format("DD/MM/YY HH:mm");
   const dateToText = dayjs(dateTo).format("DD/MM/YY HH:mm");
-  const currentTypeOffer = offersModel.getByType(type);
 
-  const currentDestination = allDestinations.destinations.find(
+  const currentDestination = allDestinations.find(
     (item) => item.id === destination
   );
+  const currentOffer =
+    offers.length > 0 && allOffers.length > 0
+      ? allOffers.filter((item) => item.type === type)
+      : undefined;
 
   return `
   <li class="trip-events__item" id=${id}>
@@ -100,7 +103,7 @@ const createEventUpdateTemplate = (state, allDestinations, offersModel) => {
           ? currentDestination.name
           : ""
       }" list="destination-list-1">
-      ${createDataListWithDestinationsTemplate(allDestinations.destinations)}
+      ${createDataListWithDestinationsTemplate(allDestinations)}
     </div>
 
     <div class="event__field-group  event__field-group--time">
@@ -127,12 +130,12 @@ const createEventUpdateTemplate = (state, allDestinations, offersModel) => {
   </header>
   <section class="event__details">
     ${
-      currentTypeOffer.length > 0
+      currentOffer
         ? `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
       <div class="event__available-offers">
-      ${currentTypeOffer
+      ${currentOffer[0].offers
         .map((item) => createOfferTemplate(item, offers))
         .join("")}
       </div>
@@ -148,7 +151,7 @@ const createEventUpdateTemplate = (state, allDestinations, offersModel) => {
 export default class EventUpdate extends AbstractStatefulView {
   #event = null;
   #destinations = null;
-  #offersModel = null;
+  #offers = null;
   #onHanldlerClickRollupBtn = null;
   #onHanldlerClickSubmitBtn = null;
   #onHanldlerClickDeleteBtn = null;
@@ -161,7 +164,7 @@ export default class EventUpdate extends AbstractStatefulView {
 
   constructor(
     event,
-    offersModel,
+    offers,
     destinations,
     onHanldlerClickRollupBtn,
     onHanldlerClickSubmitBtn,
@@ -171,7 +174,7 @@ export default class EventUpdate extends AbstractStatefulView {
     this._setState(event);
     this.#event = event;
     this.#destinations = destinations;
-    this.#offersModel = offersModel;
+    this.#offers = offers;
     this.#onHanldlerClickRollupBtn = onHanldlerClickRollupBtn;
     this.#onHanldlerClickSubmitBtn = onHanldlerClickSubmitBtn;
     this.#onHanldlerClickDeleteBtn = onHanldlerClickDeleteBtn;
@@ -182,7 +185,7 @@ export default class EventUpdate extends AbstractStatefulView {
     return createEventUpdateTemplate(
       this._state,
       this.#destinations,
-      this.#offersModel
+      this.#offers
     );
   }
 
@@ -289,13 +292,9 @@ export default class EventUpdate extends AbstractStatefulView {
 
   #handlerChangeEventOffer = (id, value) => {
     const newOffers = [...this._state.offers];
-    //TODO: когда будут приходить данные с сервера - нужно будет удалить этот костыль с MY_ID
-    const currentPosition = id.indexOf("MY_ID-");
-
-    const targetOfferId = Number(id.slice(currentPosition + 6));
 
     if (value === true) {
-      newOffers.push(targetOfferId);
+      newOffers.push(id);
       this.updateElement({
         ...this._state,
         offers: newOffers,
@@ -303,13 +302,13 @@ export default class EventUpdate extends AbstractStatefulView {
     } else {
       this.updateElement({
         ...this._state,
-        offers: newOffers.filter((item) => +item !== targetOfferId),
+        offers: newOffers.filter((item) => +item !== id),
       });
     }
   };
 
   #handlerChangeEventDestination = (value) => {
-    const newDestinationId = this.#destinations.destinations.find(
+    const newDestinationId = this.#destinations.find(
       (item) => item.name === value
     ).id;
     this.updateElement({ ...this._state, destination: newDestinationId });
