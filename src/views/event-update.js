@@ -207,14 +207,24 @@ export default class EventUpdate extends AbstractStatefulView {
 
   #disableSaveButton() {
     if (this.#submitBtn) {
-      if (this._state.basePrice <= MIN_PRICE || !this._state.destination) {
+      if (
+        this._state.basePrice <= MIN_PRICE ||
+        !this._state.destination ||
+        !this._state.dateFrom ||
+        !this._state.dateTo
+      ) {
         this.#submitBtn.disabled = true;
       }
     }
   }
 
   #unableSaveButton() {
-    if (this._state.destination && this._state.basePrice > MIN_PRICE) {
+    if (
+      this._state.destination &&
+      this._state.basePrice > MIN_PRICE &&
+      this._state.dateFrom &&
+      this._state.dateTo
+    ) {
       this.#submitBtn.disabled = false;
     }
   }
@@ -326,7 +336,6 @@ export default class EventUpdate extends AbstractStatefulView {
 
     if (e.target.name === 'event-destination') {
       this.#handlerChangeEventDestination(e.target.value);
-      this.#unableSaveButton();
     }
 
     if (e.target.name === 'event-start-time') {
@@ -339,8 +348,9 @@ export default class EventUpdate extends AbstractStatefulView {
 
     if (e.target.name === 'event-price') {
       this.#handlerChangeEventPrice(Number(e.target.value));
-      this.#unableSaveButton();
     }
+
+    this.#unableSaveButton();
   };
 
   #handlerChangeEventTimeStart = (value) => {
