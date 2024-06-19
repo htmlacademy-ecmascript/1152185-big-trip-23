@@ -4,7 +4,7 @@ import { sortPoints } from './sort-points';
 
 const DESTINATIONS_ITEMS_COUNT = 3;
 
-export const getTripRoute = (points = [], destinations = []) => {
+const getTripRoute = (points = [], destinations = []) => {
   const destinationNames = sortPoints([...points], SORT_VALUES.DAY).map(
     (point) =>
       destinations.find((destination) => destination.id === point.destination)
@@ -18,7 +18,7 @@ export const getTripRoute = (points = [], destinations = []) => {
     )}&nbsp;&mdash;&nbsp;...&nbsp;&mdash;&nbsp;${destinationNames.at(-1)}`;
 };
 
-export const getTripDurationPeriod = (points = []) => {
+const getTripDurationPeriod = (points = []) => {
   const sortedPoints = sortPoints([...points], SORT_VALUES.DAY);
 
   return sortedPoints.length
@@ -40,7 +40,7 @@ const getOffersCost = (offerIDs = [], offers = []) =>
     0
   );
 
-export const getTripCost = (points = [], offers = []) =>
+const getTripCost = (points = [], offers = []) =>
   points.reduce(
     (total, point) =>
       total +
@@ -48,3 +48,5 @@ export const getTripCost = (points = [], offers = []) =>
       getOffersCost(point.offers, getCheckedOffers(offers, point.type)),
     0
   );
+
+export { getTripRoute, getTripCost, getTripDurationPeriod };

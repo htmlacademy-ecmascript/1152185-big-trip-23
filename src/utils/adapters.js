@@ -1,4 +1,4 @@
-export const adaptToClient = (point) => {
+const adaptToClient = (point) => {
   const adaptedPoint = {
     ...point,
     dateFrom: point['date_from'],
@@ -15,7 +15,7 @@ export const adaptToClient = (point) => {
   return adaptedPoint;
 };
 
-export const adaptToServer = (point) => {
+const adaptToServer = (point) => {
   const adaptedPoint = {
     ...point,
     ['date_from']: new Date(point.dateFrom).toISOString(),
@@ -31,3 +31,5 @@ export const adaptToServer = (point) => {
 
   return adaptedPoint;
 };
+
+export { adaptToServer, adaptToClient };

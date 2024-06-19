@@ -17,5 +17,7 @@ const sortPointsBy = {
     [...points].sort((a, b) => Number(b.basePrice) - Number(a.basePrice)),
 };
 
-export const sortPoints = (points, sortPointType) =>
+const sortPoints = (points, sortPointType) =>
   sortPointsBy[sortPointType](points);
+
+export { sortPoints };

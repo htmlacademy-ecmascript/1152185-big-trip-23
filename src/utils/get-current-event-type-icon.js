@@ -1,6 +1,6 @@
 import { EVENT_TYPES_VALUES } from '../const.js';
 
-export const getCurrentEventTypeIcon = (type) => {
+const getCurrentEventTypeIcon = (type) => {
   switch (type) {
     case EVENT_TYPES_VALUES.BUS:
       return 'bus';
@@ -33,3 +33,5 @@ export const getCurrentEventTypeIcon = (type) => {
       return 'check-in';
   }
 };
+
+export { getCurrentEventTypeIcon };
