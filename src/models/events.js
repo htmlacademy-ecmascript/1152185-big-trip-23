@@ -1,7 +1,7 @@
-import { UPDATE_TYPES } from "../const.js";
-import Observable from "../framework/observable.js";
-import { adaptToClient, adaptToServer } from "../utils/adapters.js";
-import { updateData } from "../utils/updateData.js";
+import { UPDATE_TYPES } from '../const.js';
+import Observable from '../framework/observable.js';
+import { adaptToClient, adaptToServer } from '../utils/adapters.js';
+import { updateData } from '../utils/update-data.js';
 
 export default class EventsModel extends Observable {
   #events = [];
@@ -41,7 +41,6 @@ export default class EventsModel extends Observable {
 
   async update(updateType, event) {
     try {
-      console.log(updateType, event);
       const updatedEvent = await this.#service.updateEvent(
         adaptToServer(event)
       );
@@ -49,18 +48,18 @@ export default class EventsModel extends Observable {
       this.#events = updateData(this.#events, adaptedEvent);
       this._notify(updateType, adaptedEvent);
     } catch {
-      throw new Error("Update failure");
+      throw new Error('Update failure');
     }
   }
 
   async add(updateType, event) {
     try {
-      const addedEvent = await this.#service.addPoint(adaptToServer(event));
+      const addedEvent = await this.#service.addEvent(adaptToServer(event));
       const adaptedEvent = adaptToClient(addedEvent);
       this.#events.push(adaptedEvent);
       this._notify(updateType, adaptedEvent);
     } catch {
-      throw new Error("Add failure");
+      throw new Error('Add failure');
     }
   }
 
@@ -70,7 +69,7 @@ export default class EventsModel extends Observable {
       this.#events = this.#events.filter((item) => item.id !== event.id);
       this._notify(updateType);
     } catch {
-      throw new Error("Delete failure");
+      throw new Error('Delete failure');
     }
   }
 }

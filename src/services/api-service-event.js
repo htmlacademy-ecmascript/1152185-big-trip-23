@@ -1,5 +1,5 @@
-import ApiService from "../framework/api-service.js";
-import { Method, SourceUrl } from "../const.js";
+import ApiService from '../framework/api-service.js';
+import { Method, SourceUrl } from '../const.js';
 
 export default class EventsApiService extends ApiService {
   get events() {
@@ -21,7 +21,7 @@ export default class EventsApiService extends ApiService {
       url: `${SourceUrl.POINTS}/${event.id}`,
       method: Method.PUT,
       body: JSON.stringify(event),
-      headers: new Headers({ "Content-Type": "application/json" }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
     const parsedResponse = await ApiService.parseResponse(response);
@@ -33,7 +33,7 @@ export default class EventsApiService extends ApiService {
       url: SourceUrl.POINTS,
       method: Method.POST,
       body: JSON.stringify(event),
-      headers: new Headers({ "Content-Type": "application/json" }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
     const parsedResponse = await ApiService.parseResponse(response);

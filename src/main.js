@@ -1,18 +1,18 @@
-import EventsModel from "./models/events.js";
-import OffersModel from "./models/offers.js";
-import DestinationsModel from "./models/destinations.js";
-import EventsPresenter from "./presenters/events.js";
-import { ActiveFilterModel } from "./models/filters.js";
-import FiltersPresenter from "./presenters/filters.js";
-import { FILTERS } from "./mock/filters.js";
-import NewEvent from "./presenters/new-event.js";
-import EventsApiService from "./services/api-service-event.js";
-import { AUTHORIZATION, END_POINT } from "./const.js";
+import EventsModel from './models/events.js';
+import OffersModel from './models/offers.js';
+import DestinationsModel from './models/destinations.js';
+import EventsPresenter from './presenters/events.js';
+import { ActiveFilterModel } from './models/filters.js';
+import FiltersPresenter from './presenters/filters.js';
+import NewEvent from './presenters/new-event.js';
+import EventsApiService from './services/api-service-event.js';
+import { AUTHORIZATION, END_POINT, FILTERS } from './const.js';
+import TripInfoPresenter from './presenters/trip-info.js';
 
-const tripMainContainer = document.querySelector(".trip-main");
-const eventItemsContainer = document.querySelector(".trip-events__list");
+const tripMainContainer = document.querySelector('.trip-main');
+const eventItemsContainer = document.querySelector('.trip-events__list');
 const tripControlsFiltersContainer = tripMainContainer.querySelector(
-  ".trip-controls__filters"
+  '.trip-controls__filters'
 );
 
 const pointsApiService = new EventsApiService(END_POINT, AUTHORIZATION);
@@ -26,6 +26,19 @@ const eventsModel = new EventsModel(
 );
 const activeFilterModel = new ActiveFilterModel();
 eventsModel.init();
+
+const tripInfoPresenter = new TripInfoPresenter(
+  tripMainContainer,
+  eventsModel,
+  destinationsModel,
+  offersModel
+);
+
+const filtersPresenter = new FiltersPresenter(
+  activeFilterModel,
+  FILTERS,
+  tripControlsFiltersContainer
+);
 
 const newEventPresenter = new NewEvent(
   tripMainContainer,
@@ -43,12 +56,7 @@ const eventsPresenter = new EventsPresenter(
   eventItemsContainer
 );
 
-const filtersPresenter = new FiltersPresenter(
-  activeFilterModel,
-  FILTERS,
-  tripControlsFiltersContainer
-);
-
 newEventPresenter.init(eventsPresenter.onHandlerNewEvent);
 eventsPresenter.init();
 filtersPresenter.init();
+tripInfoPresenter.init();
