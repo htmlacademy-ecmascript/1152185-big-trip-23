@@ -1,8 +1,13 @@
-import { onEscKeydown } from "../utils/isEscapeKeyDown.js";
-import Event from "../views/event.js";
-import EventUpdate from "../views/event-update.js";
-import { render, replace, remove } from "../framework/render";
-import { MODE_EVENT, UPDATE_TYPES, USER_ACTIONS } from "../const.js";
+import { onEscKeydown } from '../utils/is-escape-keydown.js';
+import Event from '../views/event.js';
+import EventUpdate from '../views/event-update.js';
+import { render, replace, remove } from '../framework/render.js';
+import {
+  EVENT_UPDATE_STATE,
+  MODE_EVENT,
+  UPDATE_TYPES,
+  USER_ACTIONS,
+} from '../const.js';
 
 export default class EventPresenter {
   #eventUpdateView = null;
@@ -27,7 +32,7 @@ export default class EventPresenter {
 
   init(event) {
     this.event = event;
-    this.render(this.event, this.destinationsModel, this.offersModel);
+    this.renderEvent(this.event, this.destinationsModel, this.offersModel);
   }
 
   resetEditMode = () => {
@@ -41,11 +46,12 @@ export default class EventPresenter {
     remove(this.#eventUpdateView);
     this.#eventView = null;
     this.#eventUpdateView = null;
-    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+    document.removeEventListener('keydown', this.#onEscKeydownHandler);
   }
 
-  render(event, destinationsModel, offersModel) {
+  renderEvent(event, destinationsModel, offersModel) {
     const prevPointView = this.#eventView;
+    const prevPointEdit = this.#eventUpdateView;
 
     this.#eventView = new Event(
       event,
@@ -61,7 +67,8 @@ export default class EventPresenter {
       destinationsModel.get(),
       this.#swicthToView,
       this.#submitEventUpdate,
-      this.#deleteEvent
+      this.#deleteEvent,
+      EVENT_UPDATE_STATE.UPDATE
     );
 
     if (prevPointView === null) {
@@ -69,6 +76,9 @@ export default class EventPresenter {
     } else {
       replace(this.#eventView, prevPointView);
     }
+
+    remove(prevPointView);
+    remove(prevPointEdit);
   }
 
   #onEscKeydownHandler = (e) => onEscKeydown(e, this.#swicthToView);
@@ -104,13 +114,15 @@ export default class EventPresenter {
   #swicthToEdit = () => {
     this.#handleEditStart();
     replace(this.#eventUpdateView, this.#eventView);
-    document.addEventListener("keydown", this.#onEscKeydownHandler);
+    document.addEventListener('keydown', this.#onEscKeydownHandler);
     this.#mode = MODE_EVENT.EDIT;
   };
 
   #swicthToView = () => {
-    replace(this.#eventView, this.#eventUpdateView);
-    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+    document.removeEventListener('keydown', this.#onEscKeydownHandler);
     this.#mode = MODE_EVENT.VIEW;
+    this.#eventUpdateView.removeDatepickers();
+    this.#eventUpdateView.resetState();
+    replace(this.#eventView, this.#eventUpdateView);
   };
 }

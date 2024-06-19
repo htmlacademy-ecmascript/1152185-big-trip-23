@@ -1,8 +1,13 @@
-import { EVENT_EMPTY, UPDATE_TYPES, USER_ACTIONS } from "../const";
-import { remove, render, RenderPosition } from "../framework/render";
-import { onEscKeydown } from "../utils/isEscapeKeyDown";
-import NewEventView from "../views/event-create";
-import EventUpdate from "../views/event-update";
+import {
+  EVENT_EMPTY,
+  EVENT_UPDATE_STATE,
+  UPDATE_TYPES,
+  USER_ACTIONS,
+} from '../const.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
+import { onEscKeydown } from '../utils/is-escape-keydown.js';
+import NewEventView from '../views/event-create.js';
+import EventUpdate from '../views/event-update.js';
 
 export default class NewEvent {
   #container = null;
@@ -13,6 +18,7 @@ export default class NewEvent {
   #destinationsModel = null;
   #offersModel = null;
   #onHandlerData = null;
+  #empty = null;
 
   constructor(container, containerNewEvent, destinationsModel, offersModel) {
     this.#container = container;
@@ -39,17 +45,20 @@ export default class NewEvent {
     this.#handleButtonClick();
   };
 
-  initNewEventForm = (onHandlerData) => {
+  initNewEventForm = (onHandlerData, empty) => {
+    this.disableButton();
     this.#onHandlerData = onHandlerData;
+    this.#empty = empty;
     this.#addPointComponent = new EventUpdate(
       EVENT_EMPTY,
-      this.#offersModel,
-      this.#destinationsModel,
-      this.#closeNewEvent,
+      this.#offersModel.get(),
+      this.#destinationsModel.get(),
+      this.closeNewEvent,
       this.#submitForm,
-      this.#closeNewEvent
+      this.closeNewEvent,
+      EVENT_UPDATE_STATE.CREATE
     );
-    document.addEventListener("keydown", this.#onEscKeydownHandler);
+    document.addEventListener('keydown', this.#onEscKeydownHandler);
 
     render(
       this.#addPointComponent,
@@ -62,14 +71,18 @@ export default class NewEvent {
     this.#onHandlerData(USER_ACTIONS.ADD_EVENT, UPDATE_TYPES.NEW_DATA, data);
     this.enableButton();
     remove(this.#addPointComponent);
-    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+    document.removeEventListener('keydown', this.#onEscKeydownHandler);
   };
 
-  #onEscKeydownHandler = (e) => onEscKeydown(e, this.#closeNewEvent);
+  #onEscKeydownHandler = (e) => onEscKeydown(e, this.closeNewEvent);
 
-  #closeNewEvent = () => {
+  closeNewEvent = () => {
     remove(this.#addPointComponent);
-    document.removeEventListener("keydown", this.#onEscKeydownHandler);
+    document.removeEventListener('keydown', this.#onEscKeydownHandler);
     this.enableButton();
+
+    if (this.#empty) {
+      render(this.#empty, this.#containerNewEvent);
+    }
   };
 }
