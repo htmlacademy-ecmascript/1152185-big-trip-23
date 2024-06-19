@@ -1,12 +1,12 @@
 # Проект «Большое путешествие»
 
-* Студент: [Александр Сударев](https://up.htmlacademy.ru/ecmascript/23/user/1152185).
-* Наставник: [Евгений Лепёшкин](https://htmlacademy.ru/profile/spearance).
+- Студент: [Александр Сударев](https://up.htmlacademy.ru/ecmascript/23/user/1152185).
+- Наставник: [Евгений Лепёшкин](https://htmlacademy.ru/profile/spearance).
 
 ---
 
 _Не удаляйте и не изменяйте папки и файлы:_
-_`.editorconfig`, `.gitattributes`._
+\_`.editorconfig`, `.gitattributes`.
 
 ---
 
