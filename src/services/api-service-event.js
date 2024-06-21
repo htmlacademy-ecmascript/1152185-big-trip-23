@@ -24,8 +24,7 @@ export default class EventsApiService extends ApiService {
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
-    const parsedResponse = await ApiService.parseResponse(response);
-    return parsedResponse;
+    return await ApiService.parseResponse(response);
   }
 
   async addEvent(event) {
@@ -36,8 +35,7 @@ export default class EventsApiService extends ApiService {
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
-    const parsedResponse = await ApiService.parseResponse(response);
-    return parsedResponse;
+    return await ApiService.parseResponse(response);
   }
 
   async deleteEvent(event) {
