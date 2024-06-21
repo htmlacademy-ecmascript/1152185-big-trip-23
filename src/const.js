@@ -1,15 +1,3 @@
-const DATE_FORMATS = {
-  time: 'HH:mm',
-  shortDate: 'MMM DD',
-  formDateTime: 'DD/MM/YY HH:mm',
-};
-
-const DURATION_FORMATS = {
-  days: 'DD[D] HH[H] mm[M]',
-  hours: 'HH[H] mm[M]',
-  mins: 'mm[M]',
-};
-
 const AUTHORIZATION = 'Basic umB1tRoVHKu5p32dQ';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
@@ -112,8 +100,6 @@ const EVENT_UPDATE_STATE = {
 };
 
 export {
-  DATE_FORMATS,
-  DURATION_FORMATS,
   AUTHORIZATION,
   MODE_EVENT,
   END_POINT,

@@ -6,7 +6,7 @@ import {
 } from '../const.js';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import { onEscKeydown } from '../utils/is-escape-keydown.js';
-import NewEventView from '../views/event-create.js';
+import NewEventView from '../views/new-event.js';
 import EventUpdate from '../views/event-update.js';
 
 export default class NewEvent {
